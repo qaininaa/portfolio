@@ -1,58 +1,32 @@
-import React, { useState } from "react";
-import { motion, AnimatePresence } from "motion/react";
+import { useState } from "react";
+import { AnimatePresence, motion } from "motion/react";
 import { IoSunnyOutline, IoClose } from "react-icons/io5";
 import { HiOutlineMenuAlt3 } from "react-icons/hi";
 
 const NavBar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  const toggleMenu = () => {
-    setIsMenuOpen(!isMenuOpen);
-  };
+  const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
   const menuVariants = {
     closed: {
       x: "100%",
-      transition: {
-        type: "spring",
-        stiffness: 400,
-        damping: 40,
-      },
+      transition: { type: "spring", stiffness: 400, damping: 40 },
     },
     open: {
       x: 0,
-      transition: {
-        type: "spring",
-        stiffness: 400,
-        damping: 40,
-      },
+      transition: { type: "spring", stiffness: 400, damping: 40 },
     },
   };
 
   const overlayVariants = {
-    closed: {
-      opacity: 0,
-      transition: {
-        duration: 0.2,
-      },
-    },
-    open: {
-      opacity: 1,
-      transition: {
-        duration: 0.2,
-      },
-    },
+    closed: { opacity: 0, transition: { duration: 0.2 } },
+    open: { opacity: 1, transition: { duration: 0.2 } },
   };
 
   const menuItemVariants = {
-    closed: {
-      x: 50,
-      opacity: 0,
-    },
-    open: {
-      x: 0,
-      opacity: 1,
-    },
+    closed: { x: 50, opacity: 0 },
+    open: { x: 0, opacity: 1 },
   };
 
   const menuItems = [
@@ -71,14 +45,28 @@ const NavBar = () => {
           <p className="text-sm font-medium text-gray-800">Karina Ghaisani</p>
         </div>
 
+        {/* Menu Items for Desktop */}
+        <nav className="hidden md:flex gap-4 px-4">
+          {menuItems.map((item) => (
+            <a
+              key={item.label}
+              href={item.href}
+              className="px-3 py-2 rounded-lg text-gray-700 font-medium hover:bg-gray-300 transition-colors"
+            >
+              {item.label}
+            </a>
+          ))}
+        </nav>
+
         <div className="flex justify-center items-center gap-3">
           <button className="rounded-full bg-black p-1 hover:bg-gray-800 transition-colors">
             <IoSunnyOutline color="white" size={28} />
           </button>
 
+          {/* Menu Toggle for Mobile */}
           <button
             onClick={toggleMenu}
-            className="flex items-center bg-black rounded-full overflow-hidden h-9 hover:bg-gray-800 transition-colors"
+            className="flex items-center bg-black rounded-full overflow-hidden h-9 hover:bg-gray-800 transition-colors md:hidden"
           >
             <span className="text-white text-sm px-4">Menu</span>
             <span className="bg-amber-400 h-full aspect-square flex items-center justify-center rounded-full">
@@ -88,11 +76,11 @@ const NavBar = () => {
         </div>
       </nav>
 
-      {/* Overlay */}
+      {/* Overlay & Sliding Menu (Mobile Only) */}
       <AnimatePresence>
         {isMenuOpen && (
           <motion.div
-            className="fixed inset-0 bg-black bg-opacity-50 z-40"
+            className="fixed inset-0 bg-black bg-opacity-50 z-40 md:hidden"
             variants={overlayVariants}
             initial="closed"
             animate="open"
@@ -102,16 +90,16 @@ const NavBar = () => {
         )}
       </AnimatePresence>
 
-      {/* Sliding Menu */}
       <AnimatePresence>
         {isMenuOpen && (
           <motion.div
-            className="fixed top-0 right-0 h-full w-80 bg-white shadow-2xl z-50 overflow-hidden"
+            className="fixed top-0 right-0 h-full w-80 bg-white shadow-2xl z-50 overflow-hidden md:hidden"
             variants={menuVariants}
             initial="closed"
             animate="open"
             exit="closed"
           >
+            {/* ...isi menu slide sama persis seperti kode kamu sebelumnya... */}
             {/* Menu Header */}
             <div className="flex justify-between items-center p-6 border-b border-gray-100">
               <div className="flex items-center gap-3">
@@ -154,7 +142,7 @@ const NavBar = () => {
                   </motion.a>
                 ))}
               </nav>
-
+              {/* ...lanjutan isi menu mobile... */}
               {/* Theme Toggle in Menu */}
               <motion.div
                 className="mt-8 pt-6 border-t border-gray-100"
@@ -175,7 +163,6 @@ const NavBar = () => {
                   </button>
                 </div>
               </motion.div>
-
               {/* Social Links */}
               <motion.div
                 className="mt-6"
