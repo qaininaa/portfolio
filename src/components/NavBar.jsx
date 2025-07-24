@@ -1,10 +1,19 @@
-import { useState } from "react";
-import { AnimatePresence, motion } from "motion/react";
+import { useState, useEffect } from "react";
+import { AnimatePresence } from "motion/react";
 import { IoSunnyOutline, IoClose } from "react-icons/io5";
 import { HiOutlineMenuAlt3 } from "react-icons/hi";
 
 const NavBar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 8);
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
@@ -39,42 +48,54 @@ const NavBar = () => {
 
   return (
     <>
-      <nav className="flex justify-between bg-gray-200 items-center p-1 rounded-full relative z-50">
-        <div className="flex items-center gap-2">
-          <div className="w-8 h-8 bg-gradient-to-br from-purple-400 to-pink-400 rounded-full"></div>
-          <p className="text-sm font-medium text-gray-800">Karina Ghaisani</p>
-        </div>
+      <nav className="fixed top-0 left-0 w-full z-50 bg-transparent pointer-events-none">
+        <div
+          className={`transition-all duration-300 bg-gray-200 shadow
+            ${
+              isScrolled
+                ? "rounded-none w-full mx-0 mt-0 py-3"
+                : "rounded-full max-w-6xl mx-auto mt-4"
+            }
+            flex justify-between items-center p-1 pointer-events-auto`}
+        >
+          <div className="flex items-center gap-2">
+            <div className="w-8 h-8 bg-gradient-to-br from-purple-400 to-pink-400 rounded-full"></div>
+            <p className="text-sm font-medium text-gray-800">Karina Ghaisani</p>
+          </div>
 
-        {/* Menu Items for Desktop */}
-        <nav className="hidden md:flex gap-4 px-4">
-          {menuItems.map((item) => (
-            <a
-              key={item.label}
-              href={item.href}
-              className="px-3 py-2 rounded-lg text-gray-700 font-medium hover:bg-gray-300 transition-colors"
+          {/* Desktop Menu */}
+          <nav className="hidden md:flex gap-4 px-4">
+            {menuItems.map((item) => (
+              <a
+                key={item.label}
+                href={item.href}
+                className="px-3 py-2 rounded-lg text-gray-700 font-medium hover:bg-gray-300 transition-colors"
+              >
+                {item.label}
+              </a>
+            ))}
+          </nav>
+
+          <div className="flex justify-center items-center gap-3">
+            <button className="rounded-full bg-black p-1 hover:bg-gray-800 transition-colors">
+              <IoSunnyOutline color="white" size={28} />
+            </button>
+            {/* Mobile Menu Toggle */}
+            <button
+              onClick={toggleMenu}
+              className="flex items-center bg-black rounded-full overflow-hidden h-9 hover:bg-gray-800 transition-colors md:hidden"
             >
-              {item.label}
-            </a>
-          ))}
-        </nav>
-
-        <div className="flex justify-center items-center gap-3">
-          <button className="rounded-full bg-black p-1 hover:bg-gray-800 transition-colors">
-            <IoSunnyOutline color="white" size={28} />
-          </button>
-
-          {/* Menu Toggle for Mobile */}
-          <button
-            onClick={toggleMenu}
-            className="flex items-center bg-black rounded-full overflow-hidden h-9 hover:bg-gray-800 transition-colors md:hidden"
-          >
-            <span className="text-white text-sm px-4">Menu</span>
-            <span className="bg-amber-400 h-full aspect-square flex items-center justify-center rounded-full">
-              <HiOutlineMenuAlt3 size={24} className="text-black" />
-            </span>
-          </button>
+              <span className="text-white text-sm px-4">Menu</span>
+              <span className="bg-amber-400 h-full aspect-square flex items-center justify-center rounded-full">
+                <HiOutlineMenuAlt3 size={24} className="text-black" />
+              </span>
+            </button>
+          </div>
         </div>
       </nav>
+
+      {/* Spacer supaya konten tidak ketutupan navbar */}
+      <div className={isScrolled ? "h-14" : "h-20"}></div>
 
       {/* Overlay & Sliding Menu (Mobile Only) */}
       <AnimatePresence>
@@ -99,7 +120,6 @@ const NavBar = () => {
             animate="open"
             exit="closed"
           >
-            {/* ...isi menu slide sama persis seperti kode kamu sebelumnya... */}
             {/* Menu Header */}
             <div className="flex justify-between items-center p-6 border-b border-gray-100">
               <div className="flex items-center gap-3">
@@ -118,7 +138,6 @@ const NavBar = () => {
                 <IoClose size={24} className="text-gray-600" />
               </button>
             </div>
-
             {/* Menu Items */}
             <div className="p-6">
               <nav className="space-y-2">
@@ -142,7 +161,6 @@ const NavBar = () => {
                   </motion.a>
                 ))}
               </nav>
-              {/* ...lanjutan isi menu mobile... */}
               {/* Theme Toggle in Menu */}
               <motion.div
                 className="mt-8 pt-6 border-t border-gray-100"
