@@ -4,6 +4,7 @@ import PortFolioLayout from "./layouts/PortfolioLayout";
 import AboutMeSection from "./components/AboutMeSection";
 import ExperienceSection from "./components/ExperienceSection";
 import EducationSection from "./components/EducationSection";
+import ProjectSection from "./components/ProjectSection";
 
 export default function App() {
   return (
@@ -13,6 +14,7 @@ export default function App() {
       <AboutMeSection />
       <EducationSection />
       <ExperienceSection />
+      <ProjectSection />
     </PortFolioLayout>
   );
 }
